@@ -112,7 +112,7 @@ public class CharacterEngine : MonoBehaviour {
 		rigidbody.velocity = fullQuat * rigidbody.velocity;
 	
 		// tell the camera to rotate	
-		//Camera.main.SendMessage("Rotate", sign);
+		TowerCamera.Instance().Rotate(sign);
 	}
 
 	//private bool _dir = true;

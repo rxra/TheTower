@@ -15,7 +15,6 @@ public class TowerManager : MonoBehaviour {
 	}
 	
 	void Awake() {
-		Debug.Log ("TowerManager: Awake");
 		s_Singleton = this;
 	}
 	
