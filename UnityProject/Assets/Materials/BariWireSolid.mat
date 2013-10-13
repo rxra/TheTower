@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: BariWireSolid
+  m_Shader: {fileID: 4800000, guid: bff00b21b057d734b9b0fce71d60fd25, type: 3}
+  m_ShaderKeywords: []
+  m_SavedProperties:
+    serializedVersion: 2
+    m_TexEnvs: {}
+    m_Floats:
+      data:
+        first:
+          name: _LineWidth
+        second: .0500000007
+    m_Colors:
+      data:
+        first:
+          name: _LineColor
+        second: {r: .174825191, g: 1, b: 0, a: 1}
+      data:
+        first:
+          name: _GridColor
+        second: {r: .300843686, g: .305970132, b: .164401859, a: 0}
