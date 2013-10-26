@@ -13,7 +13,8 @@ public class CharacterEngine : MonoBehaviour {
 		_turnDistance = (TowerManager.Instance().towerLevelWidth/2) * Mathf.Tan(Mathf.Deg2Rad * (90 / 2.0f));
 		_turnDistance += TowerManager.Instance().cellWidth/2;
 		_turnSqrDistance = _turnDistance * _turnDistance;
-		
+				
+		renderer.material.color = Color.blue;
 		Debug.Log ("distance: " + _turnDistance + " " + _turnSqrDistance);
 	}
 	
@@ -80,6 +81,9 @@ public class CharacterEngine : MonoBehaviour {
 			if (_grounded) {
 				Vector3 v = dir * Time.deltaTime*speed;
 				rigidbody.MovePosition(transform.position+v);
+			} else if (_jumpCollision) {
+				_jumpCollision = false;
+				rigidbody.AddForce(_jumpCollisionForce,ForceMode.Impulse);
 			} else {
 				Vector3 v = dir * Time.deltaTime*speed*0.75f;
 				rigidbody.MovePosition(transform.position+v);
@@ -87,6 +91,7 @@ public class CharacterEngine : MonoBehaviour {
 		
 			if (_jump) {
 				_grounded = false;
+				renderer.material.color = Color.blue;
 				_jump = false;
 				rigidbody.AddForce(0,10f,0,ForceMode.Impulse);
 			}
@@ -95,11 +100,33 @@ public class CharacterEngine : MonoBehaviour {
 	
 	void OnCollisionEnter(Collision c)
 	{
-		if (c.gameObject.name=="Wall") {
-			speed = -speed;
-		} else if (c.gameObject.tag=="Floor") {
-			_grounded = true;
-			_firstBounded = true;
+		if (c.gameObject.tag=="Floor") {
+			Vector3 point = transform.InverseTransformPoint(c.contacts[0].point);
+			if (point.y<-0.4f) {
+				_floorCount++;
+				Debug.Log ("enter floor: " + _floorCount);
+				_grounded = true;
+				renderer.material.color = Color.red;
+				_firstBounded = true;
+			} else {
+				_jumpCollision = true;
+				speed = -speed;
+				_jumpCollisionForce = c.contacts[0].normal;
+			}
+		}
+	}
+	
+	void OnCollisionExit(Collision c)
+	{
+		if (c.gameObject.tag=="Floor") {
+			if (_floorCount>0) {
+				_floorCount--;
+				Debug.Log ("leave floor: " + _floorCount);
+				if (_floorCount==0) {
+					_grounded = false;
+					renderer.material.color = Color.blue;
+				}
+			}
 		}
 	}
 	
@@ -118,28 +145,23 @@ public class CharacterEngine : MonoBehaviour {
 		pos.y = transform.position.y;
 		rigidbody.position = pos;*/
 		 
-		Debug.Log ("dir before: " + dir);
-
 		// rotate dir and velocity
 		Quaternion fullQuat = Quaternion.AngleAxis(_turnAngle, Vector3.up);
 		dir = fullQuat * dir;
 		rigidbody.velocity = fullQuat * rigidbody.velocity;
-		Debug.Log ("move before : " + rigidbody.position);
 		rigidbody.MovePosition(rigidbody.position + transform.forward*0.1f);
-		Debug.Log ("move after : " + rigidbody.position);
 	
-		Debug.Log ("dir after: " + dir);
-
 		// tell the camera to rotate
-		Debug.Log ("rotate sign: " + sign);
 		TowerCamera.Instance().Rotate(sign);
 	}
 
 	//private bool _dir = true;
 	private bool _jump = false;
+	private bool _jumpCollision = false;
 	private bool _reverse = false;
 	private bool _reverseBtn = false;
 	private bool _grounded = false;
+	private int _floorCount = 0;
 	private bool _firstBounded = false;
 	private float _turnSqrDistance = 0;
 	private float _turnDistance = 0;
@@ -147,4 +169,5 @@ public class CharacterEngine : MonoBehaviour {
 	private bool _turningPreviousFrame = false;
 	private float _turnElapsed = 0;
 	private float _turnAngle = 0;
+	private Vector3 _jumpCollisionForce;
 }
