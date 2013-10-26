@@ -3,6 +3,7 @@ using System.Collections;
 
 public class TowerManager : MonoBehaviour {
 	
+	public string floor;
 	public float cellWidth = 1;
 	public float cellHeight = 2;
 	public float plateformThicknessFactor = 5;

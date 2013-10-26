@@ -26,6 +26,7 @@ public class CreateTowerPlateform : ScriptableWizard
 	public float plateformThicknessFactor = 5;
 	public TowerSide towerSide = TowerSide.TS_FRONT;
 	public PlateformType type = PlateformType.PT_WIDTH;
+	public int level = 0;
     public string optionalName;
  
     [MenuItem("GameObject/TowerWorld/Tower Plateform")]
@@ -62,18 +63,18 @@ public class CreateTowerPlateform : ScriptableWizard
  
 		switch(towerSide) {
 		case TowerSide.TS_FRONT:
-	        tplateform.transform.position = new Vector3(0,0,-(tManager.towerLevelWidth/2+tManager.cellWidth/2));
+	        tplateform.transform.position = new Vector3(0,level*tManager.cellHeight,-(tManager.towerLevelWidth/2+tManager.cellWidth/2));
 			break;
 		case TowerSide.TS_BACK:
-	        tplateform.transform.position = new Vector3(0,0,(tManager.towerLevelWidth/2+tManager.cellWidth/2));
+	        tplateform.transform.position = new Vector3(0,level*tManager.cellHeight,(tManager.towerLevelWidth/2+tManager.cellWidth/2));
 			break;
 		case TowerSide.TS_LEFT:
 			tplateform.transform.rotation = Quaternion.Euler(0,90,0);
-	        tplateform.transform.position = new Vector3(-(tManager.towerLevelWidth/2+tManager.cellWidth/2),0,0);
+	        tplateform.transform.position = new Vector3(-(tManager.towerLevelWidth/2+tManager.cellWidth/2),level*tManager.cellHeight,0);
 			break;
 		case TowerSide.TS_RIGHT:
 			tplateform.transform.rotation = Quaternion.Euler(0,90,0);
-	        tplateform.transform.position = new Vector3((tManager.towerLevelWidth/2+tManager.cellWidth/2),0,0);
+	        tplateform.transform.position = new Vector3((tManager.towerLevelWidth/2+tManager.cellWidth/2),level*tManager.cellHeight,0);
 			break;
 		}
 			
@@ -133,6 +134,9 @@ public class CreateTowerPlateform : ScriptableWizard
 		if (tManager.plateformThicknessFactor==0) {
 			tManager.plateformThicknessFactor = plateformThicknessFactor;
 		}
+		
+		tplateform.tag = tManager.floor;
+		tplateform.AddComponent<MeshCollider>();
 	}
 
 	private bool ComputeTowerManager()

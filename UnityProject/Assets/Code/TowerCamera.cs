@@ -12,7 +12,7 @@ public class TowerCamera : MonoBehaviour {
 
 	public void Rotate(float iSign)
 	{
-		camera.orthographic		= false; 
+		//camera.orthographic		= false; 
 		_rotationAngle			= _rotating ? -_currentAngle : 90 * iSign;
 		_realRotationDuration 	= _rotating ? _rotationElapsed : rotationDuration;
 		_rotating 				= true;
@@ -59,7 +59,7 @@ public class TowerCamera : MonoBehaviour {
 			if (_rotationElapsed > _realRotationDuration) {
 				dt -= _rotationElapsed - _realRotationDuration;
 				_rotating = false;
-				camera.orthographic	= true; 
+				//camera.orthographic	= true; 
 			}	
 			float angle = _rotationAngle * dt / _realRotationDuration;
 			_currentAngle += angle;

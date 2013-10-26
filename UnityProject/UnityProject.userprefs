@@ -2,13 +2,13 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Code/TowerCamera.cs">
     <Files>
-      <File FileName="Assets/Code/TowerCamera.cs" Line="32" Column="36" />
-      <File FileName="Assets/Code/TowerManager.cs" Line="10" Column="7" />
-      <File FileName="Assets/Code/CharacterEngine.cs" Line="116" Column="1" />
+      <File FileName="Assets/Code/TowerCamera.cs" Line="62" Column="7" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore />
+    <BreakpointStore>
+      <Breakpoint file="/Users/nicolashognon/DEV/git/TheTower/UnityProject/Assets/Code/SoundAnalysis/FFT.cs" line="169" />
+    </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

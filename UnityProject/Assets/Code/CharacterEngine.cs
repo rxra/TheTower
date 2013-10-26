@@ -13,33 +13,15 @@ public class CharacterEngine : MonoBehaviour {
 		_turnDistance = (TowerManager.Instance().towerLevelWidth/2) * Mathf.Tan(Mathf.Deg2Rad * (90 / 2.0f));
 		_turnDistance += TowerManager.Instance().cellWidth/2;
 		_turnSqrDistance = _turnDistance * _turnDistance;
+		
+		Debug.Log ("distance: " + _turnDistance + " " + _turnSqrDistance);
 	}
 	
 	void Update()
 	{
-		if (!_turning) {
-			Vector3 faceCenter = Vector3.Cross(Vector3.up, dir);
-			Vector3 fromCenter = transform.position;
-			fromCenter.y = 0.0f;
-			if (Vector3.Dot(faceCenter, fromCenter) < 0.0f) {
-				faceCenter = -faceCenter;
-			}	
-			faceCenter *= TowerManager.Instance().towerLevelWidth/2 + TowerManager.Instance().cellWidth/2;
-			if ((fromCenter - faceCenter).sqrMagnitude > _turnSqrDistance) {
-				Turn(faceCenter);	
-			}	
-		}
+		Debug.DrawRay(transform.position,transform.right);
+		Debug.DrawRay(transform.position,transform.forward,Color.red);
 		
-		if (_turning) {
-			float dt = Time.deltaTime;	
-			_turnElapsed += dt;
-			if (_turnElapsed > turnDuration) {
-				dt -= (_turnElapsed - turnDuration);
-				_turning = false;
-			}
-			transform.Rotate(Vector3.up, _turnAngle * dt / turnDuration);
-		}
-
 		if (_grounded && (Input.GetKeyDown(KeyCode.Space) || Input.GetAxis("CharacterJump")==1)) {
 			_jump = true;
 		}
@@ -59,6 +41,36 @@ public class CharacterEngine : MonoBehaviour {
 	// Update is called once per frame
 	void FixedUpdate () {
 		
+		if (!_turning && !_turningPreviousFrame) {
+			Vector3 faceCenter = Vector3.Cross(Vector3.up, dir);
+			Vector3 fromCenter = transform.position;
+			fromCenter.y = 0.0f;
+			if (Vector3.Dot(faceCenter, fromCenter) < 0.0f) {
+				faceCenter = -faceCenter;
+			}	
+			faceCenter *= TowerManager.Instance().towerLevelWidth/2 + TowerManager.Instance().cellWidth/2;
+			if ((fromCenter - faceCenter).sqrMagnitude >= _turnSqrDistance) {
+				Turn(faceCenter);	
+			}	
+		}
+		
+		if (_turningPreviousFrame) {
+			_turningPreviousFrame = false;
+		}
+		
+		if (_turning) {
+			float dt = Time.deltaTime;	
+			_turnElapsed += dt;
+			if (_turnElapsed > turnDuration) {
+				dt -= (_turnElapsed - turnDuration);
+				_turning = false;
+				_turningPreviousFrame = true;
+			}
+			transform.Rotate(Vector3.up, _turnAngle * dt / turnDuration);
+			
+			return;
+		}
+
 		if (_firstBounded && !_turning) {
 			if (_reverse) {
 				_reverse = false;
@@ -97,21 +109,29 @@ public class CharacterEngine : MonoBehaviour {
 		_turnElapsed = 0;
 		
 		// compute angle
-		Vector3 cross = Vector3.Cross(transform.position, dir);	
+		Vector3 cross = Vector3.Cross(transform.position, transform.forward);
 		float sign = Mathf.Sign(cross.y);
 		_turnAngle = 90 * sign;	
 			
 		// adjust character position
-		Vector3 pos = faceCenter + dir * _turnDistance;
+		/*Vector3 pos = faceCenter + dir * _turnDistance;
 		pos.y = transform.position.y;
-		rigidbody.position = pos;
+		rigidbody.position = pos;*/
 		 
+		Debug.Log ("dir before: " + dir);
+
 		// rotate dir and velocity
 		Quaternion fullQuat = Quaternion.AngleAxis(_turnAngle, Vector3.up);
 		dir = fullQuat * dir;
 		rigidbody.velocity = fullQuat * rigidbody.velocity;
+		Debug.Log ("move before : " + rigidbody.position);
+		rigidbody.MovePosition(rigidbody.position + transform.forward*0.1f);
+		Debug.Log ("move after : " + rigidbody.position);
 	
-		// tell the camera to rotate	
+		Debug.Log ("dir after: " + dir);
+
+		// tell the camera to rotate
+		Debug.Log ("rotate sign: " + sign);
 		TowerCamera.Instance().Rotate(sign);
 	}
 
@@ -124,6 +144,7 @@ public class CharacterEngine : MonoBehaviour {
 	private float _turnSqrDistance = 0;
 	private float _turnDistance = 0;
 	private bool _turning = false;
+	private bool _turningPreviousFrame = false;
 	private float _turnElapsed = 0;
 	private float _turnAngle = 0;
 }
