@@ -6,6 +6,7 @@ public class CharacterEngine : MonoBehaviour {
 	public float speed = 2.5f;
 	public Vector3 dir = Vector3.right;
 	public float turnDuration = 1f;
+	public float notMovingTimer = 0.5f;
 	
 	// Use this for initialization
 	void Start ()
@@ -13,15 +14,15 @@ public class CharacterEngine : MonoBehaviour {
 		_turnDistance = (TowerManager.Instance().towerLevelWidth/2) * Mathf.Tan(Mathf.Deg2Rad * (90 / 2.0f));
 		_turnDistance += TowerManager.Instance().cellWidth/2;
 		_turnSqrDistance = _turnDistance * _turnDistance;
+		//Debug.Log ("distance: " + _turnDistance + " " + _turnSqrDistance);
 				
-		renderer.material.color = Color.blue;
-		Debug.Log ("distance: " + _turnDistance + " " + _turnSqrDistance);
+		//renderer.material.color = Color.blue;
 	}
 	
 	void Update()
 	{
-		Debug.DrawRay(transform.position,transform.right);
-		Debug.DrawRay(transform.position,transform.forward,Color.red);
+		//Debug.DrawRay(transform.position,transform.right);
+		//Debug.DrawRay(transform.position,transform.forward,Color.red);
 		
 		if (_grounded && (Input.GetKeyDown(KeyCode.Space) || Input.GetAxis("CharacterJump")==1)) {
 			_jump = true;
@@ -41,6 +42,19 @@ public class CharacterEngine : MonoBehaviour {
 	
 	// Update is called once per frame
 	void FixedUpdate () {
+		
+		if (!_turning && transform.position==_previousPos) {
+			_notMoving += Time.fixedDeltaTime;
+			if (_notMoving>notMovingTimer) {
+				_notMoving = 0;
+				_jumpCollision = true;
+				speed = -speed;
+				_jumpCollisionForce = -dir;
+				renderer.material.mainTextureScale = new Vector2(-renderer.material.mainTextureScale.x,renderer.material.mainTextureScale.y);
+			}
+		} else {
+			_notMoving = 0;
+		}
 		
 		if (!_turning && !_turningPreviousFrame) {
 			Vector3 faceCenter = Vector3.Cross(Vector3.up, dir);
@@ -69,13 +83,11 @@ public class CharacterEngine : MonoBehaviour {
 			}
 			transform.Rotate(Vector3.up, _turnAngle * dt / turnDuration);
 			
-			return;
-		}
-
-		if (_firstBounded && !_turning) {
+		} else if (_firstBounded && !_turning) {
 			if (_reverse) {
 				_reverse = false;
 				speed = -speed;
+				renderer.material.mainTextureScale = new Vector2(-renderer.material.mainTextureScale.x,renderer.material.mainTextureScale.y);
 			}
 
 			if (_grounded) {
@@ -91,11 +103,13 @@ public class CharacterEngine : MonoBehaviour {
 		
 			if (_jump) {
 				_grounded = false;
-				renderer.material.color = Color.blue;
+				//renderer.material.color = Color.blue;
 				_jump = false;
 				rigidbody.AddForce(0,10f,0,ForceMode.Impulse);
 			}
 		}
+		
+		_previousPos = transform.position;
 	}
 	
 	void OnCollisionEnter(Collision c)
@@ -104,14 +118,20 @@ public class CharacterEngine : MonoBehaviour {
 			Vector3 point = transform.InverseTransformPoint(c.contacts[0].point);
 			if (point.y<-0.4f) {
 				_floorCount++;
-				Debug.Log ("enter floor: " + _floorCount);
+				//Debug.Log ("enter floor: " + _floorCount);
 				_grounded = true;
-				renderer.material.color = Color.red;
+				//renderer.material.color = Color.red;
 				_firstBounded = true;
 			} else {
-				_jumpCollision = true;
-				speed = -speed;
-				_jumpCollisionForce = c.contacts[0].normal;
+				float dot = Vector3.Dot(transform.up,c.contacts[0].normal);
+				//Debug.Log ("dot="+dot);
+				if (dot==0) {
+					_jumpCollision = true;
+					speed = -speed;
+					renderer.material.mainTextureScale = new Vector2(-renderer.material.mainTextureScale.x,renderer.material.mainTextureScale.y);
+					_jumpCollisionForce = c.contacts[0].normal;
+				} else {
+				}
 			}
 		}
 	}
@@ -121,10 +141,10 @@ public class CharacterEngine : MonoBehaviour {
 		if (c.gameObject.tag=="Floor") {
 			if (_floorCount>0) {
 				_floorCount--;
-				Debug.Log ("leave floor: " + _floorCount);
+				//Debug.Log ("leave floor: " + _floorCount);
 				if (_floorCount==0) {
 					_grounded = false;
-					renderer.material.color = Color.blue;
+					//renderer.material.color = Color.blue;
 				}
 			}
 		}
@@ -170,4 +190,7 @@ public class CharacterEngine : MonoBehaviour {
 	private float _turnElapsed = 0;
 	private float _turnAngle = 0;
 	private Vector3 _jumpCollisionForce;
+	private Vector3 _previousPos = Vector3.zero;
+	private float _notMoving = 0;
+	
 }

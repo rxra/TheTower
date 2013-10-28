@@ -4,6 +4,7 @@ using System.Collections;
 public class TowerCamera : MonoBehaviour {
 
 	public float rotationDuration = 0.1f;
+	public GameObject player;
 	
 	public static TowerCamera Instance()
 	{
@@ -66,7 +67,12 @@ public class TowerCamera : MonoBehaviour {
 			transform.RotateAround(Vector3.zero, Vector3.up, angle);
 		}
 	}
-
+	
+	void LaunchPlayer()
+	{
+		player.SetActive(true);
+	}
+	
 	private static TowerCamera s_Singleton = null;
 	
 	private bool _rotating = false;
