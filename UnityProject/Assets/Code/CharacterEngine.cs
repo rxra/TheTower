@@ -7,6 +7,7 @@ public class CharacterEngine : MonoBehaviour {
 	public Vector3 dir = Vector3.right;
 	public float turnDuration = 1f;
 	public float notMovingTimer = 0.5f;
+	public GameObject sprite;
 	
 	// Use this for initialization
 	void Start ()
@@ -48,9 +49,10 @@ public class CharacterEngine : MonoBehaviour {
 			if (_notMoving>notMovingTimer) {
 				_notMoving = 0;
 				_jumpCollision = true;
-				speed = -speed;
+				_reverse = true;
+				//speed = -speed;
 				_jumpCollisionForce = -dir;
-				renderer.material.mainTextureScale = new Vector2(-renderer.material.mainTextureScale.x,renderer.material.mainTextureScale.y);
+				//renderer.material.mainTextureScale = new Vector2(-renderer.material.mainTextureScale.x,renderer.material.mainTextureScale.y);
 			}
 		} else {
 			_notMoving = 0;
@@ -87,7 +89,8 @@ public class CharacterEngine : MonoBehaviour {
 			if (_reverse) {
 				_reverse = false;
 				speed = -speed;
-				renderer.material.mainTextureScale = new Vector2(-renderer.material.mainTextureScale.x,renderer.material.mainTextureScale.y);
+				transform.Rotate(Vector3.up, 180);
+				//renderer.material.mainTextureScale = new Vector2(-renderer.material.mainTextureScale.x,renderer.material.mainTextureScale.y);
 			}
 
 			if (_grounded) {
@@ -103,6 +106,7 @@ public class CharacterEngine : MonoBehaviour {
 		
 			if (_jump) {
 				_grounded = false;
+				sprite.SendMessage("Stop");
 				//renderer.material.color = Color.blue;
 				_jump = false;
 				rigidbody.AddForce(0,10f,0,ForceMode.Impulse);
@@ -116,19 +120,21 @@ public class CharacterEngine : MonoBehaviour {
 	{
 		if (c.gameObject.tag=="Floor") {
 			Vector3 point = transform.InverseTransformPoint(c.contacts[0].point);
-			if (point.y<-0.4f) {
+			if (point.y<=0.1) {
 				_floorCount++;
 				//Debug.Log ("enter floor: " + _floorCount);
 				_grounded = true;
 				//renderer.material.color = Color.red;
 				_firstBounded = true;
+				sprite.SendMessage("Run");
 			} else {
 				float dot = Vector3.Dot(transform.up,c.contacts[0].normal);
 				//Debug.Log ("dot="+dot);
 				if (dot==0) {
 					_jumpCollision = true;
-					speed = -speed;
-					renderer.material.mainTextureScale = new Vector2(-renderer.material.mainTextureScale.x,renderer.material.mainTextureScale.y);
+					_reverse = true;
+					//speed = -speed;
+					//renderer.material.mainTextureScale = new Vector2(-renderer.material.mainTextureScale.x,renderer.material.mainTextureScale.y);
 					_jumpCollisionForce = c.contacts[0].normal;
 				} else {
 				}
@@ -144,6 +150,7 @@ public class CharacterEngine : MonoBehaviour {
 				//Debug.Log ("leave floor: " + _floorCount);
 				if (_floorCount==0) {
 					_grounded = false;
+					sprite.SendMessage("Stop");
 					//renderer.material.color = Color.blue;
 				}
 			}
