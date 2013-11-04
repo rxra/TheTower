@@ -43,10 +43,7 @@ public class CharacterSprite : MonoBehaviour
 	        gameObject.AddComponent(typeof(MeshRenderer));
 		}
  
-		Debug.Log ("framSize: " + frameSize);
-		Debug.Log ("texture: " + texture.width + "x" + texture.height);
 		uvSize = new Vector2((float)(((float)frameSize.x) / ((float)texture.width)), frameSize.y / (float)texture.height); 
-		Debug.Log ("uvSize: " + uvSize);
 		
 		// create the mesh
 		mesh = new Mesh();
@@ -134,7 +131,6 @@ public class CharacterSprite : MonoBehaviour
 	void SetFrame(int iFrame)
 	{
 		currentFrame = iFrame;
-		Debug.Log ("frame: " + currentFrame);
 			
 		Vector2[]uvs = mesh.uv;
 		
@@ -147,9 +143,6 @@ public class CharacterSprite : MonoBehaviour
 		uvs[6].x = uvs[3].x;
 		uvs[7].x = uvs[2].x;
 		
-		for(int i=0;i<8;i++) {
-			Debug.Log (uvs[i]);
-		}
 		mesh.uv = uvs;
 		
 		/*if (run) {

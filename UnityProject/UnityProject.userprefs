@@ -2,14 +2,16 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Code/CharacterEngine.cs">
     <Files>
-      <File FileName="Assets/Code/TowerCamera.cs" Line="50" Column="40" />
-      <File FileName="Assets/Code/CharacterEngine.cs" Line="1" Column="1" />
+      <File FileName="../../../../Downloads/FloodedTower(for Mac)/Assets/Scripts/CharacterScript.cs" Line="18" Column="2" />
+      <File FileName="../../../../Downloads/FloodedTower(for Mac)/Assets/Scripts/CharacterSpriteScript.cs" Line="15" Column="1" />
+      <File FileName="Assets/Code/TowerCamera.cs" Line="1" Column="1" />
+      <File FileName="Assets/Code/CharacterEngine.cs" Line="191" Column="1" />
+      <File FileName="Assets/Code/CharacterSprite.cs" Line="1" Column="1" />
+      <File FileName="Assets/Code/EnnemiSimpleEngine.cs" Line="19" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/nicolashognon/DEV/git/TheTower/UnityProject/Assets/Code/SoundAnalysis/FFT.cs" line="169" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>

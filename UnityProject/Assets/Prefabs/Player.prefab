@@ -13,7 +13,7 @@ GameObject:
   - 114: {fileID: 11400002}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -82,7 +82,7 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1.39999998, z: .5}
+  m_Size: {x: .899999976, y: 1.39999998, z: .5}
   m_Center: {x: 0, y: .699999988, z: 0}
 --- !u!114 &11400000
 MonoBehaviour:
@@ -90,7 +90,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100002}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e865bd78213ef439e9cec689307fe832, type: 3}
   m_Name: 
@@ -101,7 +101,7 @@ MonoBehaviour:
   runStartFrame: 0
   runEndFrame: 2
   runHeight: 0
-  runDuration: .5
+  runDuration: .400000006
   jumpFrame: 3
 --- !u!114 &11400002
 MonoBehaviour:
@@ -116,9 +116,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   dir: {x: 1, y: 0, z: 0}
-  turnDuration: 1
-  notMovingTimer: .5
   sprite: {fileID: 100002}
+  jumpSpeedFactor: .75
+  jumpForce: {x: 0, y: 10, z: 0}
+  turnDuration: .300000012
+  notMovingTimer: .5
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
